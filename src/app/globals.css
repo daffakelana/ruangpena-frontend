@@ -53,3 +53,7 @@ body {
   color: var(--color-stone-900);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}

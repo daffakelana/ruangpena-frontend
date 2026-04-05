@@ -4,11 +4,85 @@ import { BodyText, ClickAbleBadge, HeadingSatoe } from '@/components'
 import { ChevronLeftIcon } from '@heroicons/react/24/outline'
 import { share } from '@/assets'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { motion } from 'motion/react'
 import Image from 'next/image'
 
-// ── Tinder Image Slider ────────────────────────────────────────────────────────
+// ── Mobile Horizontal Scroll Slider ───────────────────────────────────────────
+const MobileSlider = ({ images = [] }) => {
+    const [activeIndex, setActiveIndex] = useState(0)
+    const scrollRef = useRef(null)
+
+    const handleScroll = () => {
+        const el = scrollRef.current
+        if (!el) return
+        const index = Math.round(el.scrollLeft / el.offsetWidth)
+        setActiveIndex(index)
+    }
+
+    const scrollTo = (index) => {
+        const el = scrollRef.current
+        if (!el) return
+        el.scrollTo({ left: index * el.offsetWidth, behavior: 'smooth' })
+        setActiveIndex(index)
+    }
+
+    if (images.length === 0) return null
+
+    return (
+        <div className="lg:hidden w-full">
+            {/* Scroll Container */}
+            <div
+                ref={scrollRef}
+                onScroll={handleScroll}
+                className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-3 pb-2"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+                {images.map((src, index) => (
+                    <div
+                        key={index}
+                        className="relative shrink-0 w-[80vw] h-[500px] rounded-2xl overflow-hidden snap-center border-4 border-white shadow-md"
+                    >
+                        <Image
+                            src={src}
+                            alt={`Gambar ${index + 1}`}
+                            fill
+                            className="object-cover"
+                            draggable={false}
+                            sizes="80vw"
+                        />
+                    </div>
+                ))}
+            </div>
+
+            {/* Indicators */}
+            {images.length > 1 && (
+                <div className="flex justify-center gap-2 mt-3">
+                    {images.map((_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => scrollTo(index)}
+                            className={`transition-all duration-300 rounded-full ${index === activeIndex
+                                    ? 'bg-stone-800 w-5 h-2.5'
+                                    : 'bg-stone-300 w-2.5 h-2.5 hover:bg-stone-400'
+                                }`}
+                            aria-label={`Go to slide ${index + 1}`}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {/* Counter */}
+            <div className="text-center mt-2">
+                <BodyText variant="sm" classname="text-stone-500">
+                    {activeIndex + 1} / {images.length}
+                </BodyText>
+            </div>
+        </div>
+    )
+}
+
+// ── Desktop Tinder Stack Slider ────────────────────────────────────────────────
 const TinderImageSlider = ({ images = [] }) => {
     const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -81,7 +155,7 @@ const TinderImageSlider = ({ images = [] }) => {
                                     fill
                                     className="object-cover rounded-2xl"
                                     draggable={false}
-                                    sizes="(max-width: 768px) 100vw, 320px"
+                                    sizes="320px"
                                 />
                             </div>
                         </motion.div>
@@ -104,9 +178,9 @@ const TinderImageSlider = ({ images = [] }) => {
                         <button
                             key={index}
                             onClick={() => setCurrentIndex(index)}
-                            className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentIndex
-                                    ? 'bg-stone-800 scale-110'
-                                    : 'bg-stone-300 hover:bg-stone-400'
+                            className={`transition-all duration-300 rounded-full ${index === currentIndex
+                                    ? 'bg-stone-800 w-5 h-2.5'
+                                    : 'bg-stone-300 w-2.5 h-2.5 hover:bg-stone-400'
                                 }`}
                             aria-label={`Go to slide ${index + 1}`}
                         />
@@ -170,30 +244,40 @@ const SectionHero = ({ article }) => {
         year: 'numeric',
     })
 
-    // Gunakan gallery jika ada, fallback ke thumbnail
     const images = article.gallery?.length > 0
         ? article.gallery
         : [article.thumbnail].filter(Boolean)
 
     return (
         <section className="bg-white">
-            <div className="pt-[140px] pb-[64px] px-5 lg:px-0 max-w-[996px] mx-auto flex gap-5 bg-white">
-                {/* Left Side */}
-                <article className="flex flex-col gap-9 max-w-[690px] w-full">
-                    <BackButton />
-                    <HeadingSatoe>{article.title}</HeadingSatoe>
-                    <DetailInformation
-                        category={article.category_name}
-                        date={date}
-                        readDuration={article.read_duration}
-                    />
-                    <ClickAbleBadge icon={share} classname="w-fit">Share</ClickAbleBadge>
-                </article>
+            <div className="pt-[140px] pb-[64px] px-5 lg:px-0 max-w-[996px] mx-auto bg-white">
 
-                {/* Right Side — Slider */}
-                <article className="lg:flex w-full hidden">
-                    <TinderImageSlider images={images} />
-                </article>
+        
+
+                {/* Main Content */}
+                <div className="flex gap-5">
+                    {/* Left Side */}
+                    <article className="flex flex-col gap-9 max-w-[690px] w-full">
+                        <BackButton />
+                        <HeadingSatoe>{article.title}</HeadingSatoe>
+                        <DetailInformation
+                            category={article.category_name}
+                            date={date}
+                            readDuration={article.read_duration}
+                        />
+                        <ClickAbleBadge icon={share} classname="w-fit">Share</ClickAbleBadge>
+
+                        {/* Mobile Slider — di atas konten */}
+                        <div className=" lg:hidden">
+                            <MobileSlider images={images} />
+                        </div>
+                    </article>
+
+                    {/* Right Side — Desktop Tinder Slider */}
+                    <article className="lg:flex w-full hidden">
+                        <TinderImageSlider images={images} />
+                    </article>
+                </div>
             </div>
         </section>
     )
