@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+.pt-serif {
+  font-family: var(--font-pt-serif);
+}
+
+.dm-sans {
+  font-family: var(--font-dm-sans);
+}
+
+.gloria {
+  font-family: var(--font-gloria-hallelujah);
+}
+
+.card-ornamen {
+  box-shadow: 0px 195.85px 54.772px 0px rgba(0, 0, 0, 0.00), 0px 125.311px 49.792px 0px rgba(0, 0, 0, 0.00), 0px 70.539px 42.324px 0px rgba(0, 0, 0, 0.01), 0px 31.535px 31.535px 0px rgba(0, 0, 0, 0.02), 0px 7.469px 17.427px 0px rgba(0, 0, 0, 0.02);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  
+  /* color */
+  --color-stone-50:  #fafaf9;
+  --color-stone-100: #f5f5f4;
+  --color-stone-200: #e7e5e4;
+  --color-stone-300: #d6d3d1;
+  --color-stone-400: #a8a29e;
+  --color-stone-500: #78716c;
+  --color-stone-600: #57534e;
+  --color-stone-700: #44403c;
+  --color-stone-800: #292524;
+  --color-stone-900: #1c1917;
+  --color-stone-950: #0c0a09;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--color-stone-100);
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--color-stone-900);
+  font-family: Arial, Helvetica, sans-serif;
+}
