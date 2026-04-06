@@ -5,8 +5,9 @@ import { ChevronLeftIcon } from '@heroicons/react/24/outline'
 import { share } from '@/assets'
 import Link from 'next/link'
 import React, { useState, useRef } from 'react'
-import { motion } from 'motion/react'
+import { motion, AnimatePresence } from 'motion/react'
 import Image from 'next/image'
+import SharePopup from '../../../components/share-pop-up'
 
 // ── Mobile Horizontal Scroll Slider ───────────────────────────────────────────
 const MobileSlider = ({ images = [] }) => {
@@ -31,21 +32,20 @@ const MobileSlider = ({ images = [] }) => {
 
     return (
         <div className="lg:hidden w-full">
-            {/* Scroll Container */}
             <div
                 ref={scrollRef}
                 onScroll={handleScroll}
-                className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-3 pb-2"
+                className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-2"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
                 {images.map((src, index) => (
                     <div
                         key={index}
-                        className="relative shrink-0 w-[80vw] h-[500px] rounded-2xl overflow-hidden snap-center border-4 border-white shadow-md"
+                        className="relative shrink-0 w-[80vw] h-[260px] rounded-2xl overflow-hidden snap-center border-4 border-white shadow-md"
                     >
                         <Image
                             src={src}
-                            alt={`Gambar ${index + 1}`}
+                            alt={'Gambar ' + (index + 1)}
                             fill
                             className="object-cover"
                             draggable={false}
@@ -55,24 +55,18 @@ const MobileSlider = ({ images = [] }) => {
                 ))}
             </div>
 
-            {/* Indicators */}
             {images.length > 1 && (
                 <div className="flex justify-center gap-2 mt-3">
                     {images.map((_, index) => (
                         <button
                             key={index}
                             onClick={() => scrollTo(index)}
-                            className={`transition-all duration-300 rounded-full ${index === activeIndex
-                                    ? 'bg-stone-800 w-5 h-2.5'
-                                    : 'bg-stone-300 w-2.5 h-2.5 hover:bg-stone-400'
-                                }`}
-                            aria-label={`Go to slide ${index + 1}`}
+                            className={'transition-all duration-300 rounded-full ' + (index === activeIndex ? 'bg-stone-800 w-5 h-2.5' : 'bg-stone-300 w-2.5 h-2.5 hover:bg-stone-400')}
                         />
                     ))}
                 </div>
             )}
 
-            {/* Counter */}
             <div className="text-center mt-2">
                 <BodyText variant="sm" classname="text-stone-500">
                     {activeIndex + 1} / {images.length}
@@ -107,7 +101,6 @@ const TinderImageSlider = ({ images = [] }) => {
 
     return (
         <div className="w-full max-w-xs mx-auto relative hidden lg:block">
-            {/* Cards Stack */}
             <div className="relative w-full h-[392px] mt-8">
                 {images.map((src, index) => {
                     const cardProps = getCardProps(index)
@@ -141,17 +134,12 @@ const TinderImageSlider = ({ images = [] }) => {
                                     }
                                 }
                             }}
-                            transition={{
-                                type: 'spring',
-                                stiffness: 400,
-                                damping: 40,
-                                mass: 0.5,
-                            }}
+                            transition={{ type: 'spring', stiffness: 400, damping: 40, mass: 0.5 }}
                         >
                             <div className="relative w-full h-[380px]">
                                 <Image
                                     src={src}
-                                    alt={`Gambar ${index + 1}`}
+                                    alt={'Gambar ' + (index + 1)}
                                     fill
                                     className="object-cover rounded-2xl"
                                     draggable={false}
@@ -163,12 +151,10 @@ const TinderImageSlider = ({ images = [] }) => {
                 })}
             </div>
 
-            {/* Navigation */}
             <div className="flex items-center justify-between gap-4 mt-6 max-w-[200px] mx-auto">
                 <button
                     onClick={handlePrevious}
-                    className="bg-white/90 hover:bg-white border border-stone-200 rounded-full p-2 transition-all duration-200 hover:scale-110 backdrop-blur-sm"
-                    aria-label="Previous image"
+                    className="bg-white/90 hover:bg-white border border-stone-200 rounded-full p-2 transition-all duration-200 hover:scale-110"
                 >
                     <ChevronLeftIcon className="w-4 h-4 text-gray-700" />
                 </button>
@@ -178,25 +164,19 @@ const TinderImageSlider = ({ images = [] }) => {
                         <button
                             key={index}
                             onClick={() => setCurrentIndex(index)}
-                            className={`transition-all duration-300 rounded-full ${index === currentIndex
-                                    ? 'bg-stone-800 w-5 h-2.5'
-                                    : 'bg-stone-300 w-2.5 h-2.5 hover:bg-stone-400'
-                                }`}
-                            aria-label={`Go to slide ${index + 1}`}
+                            className={'transition-all duration-300 rounded-full ' + (index === currentIndex ? 'bg-stone-800 w-5 h-2.5' : 'bg-stone-300 w-2.5 h-2.5 hover:bg-stone-400')}
                         />
                     ))}
                 </div>
 
                 <button
                     onClick={handleNext}
-                    className="bg-white/90 hover:bg-white border border-stone-200 rounded-full p-2 transition-all duration-200 hover:scale-110 backdrop-blur-sm"
-                    aria-label="Next image"
+                    className="bg-white/90 hover:bg-white border border-stone-200 rounded-full p-2 transition-all duration-200 hover:scale-110"
                 >
                     <ChevronLeftIcon className="w-4 h-4 text-gray-700 rotate-180" />
                 </button>
             </div>
 
-            {/* Counter */}
             <div className="text-center mt-3">
                 <BodyText variant="sm" classname="text-stone-600">
                     {currentIndex + 1} / {images.length}
@@ -217,19 +197,19 @@ const BackButton = () => (
 // ── Detail Information ─────────────────────────────────────────────────────────
 const DetailInformation = ({ category, date, readDuration }) => (
     <div className="flex flex-col md:items-center md:flex-row gap-3 md:gap-4">
-        <div className="sub-info">
+        <div>
             <BodyText variant="sm" classname="text-stone-600">KATEGORI</BodyText>
             <BodyText variant="baseBold" classname="text-stone-900">
-                #{category?.toUpperCase()}
+                {'#' + category?.toUpperCase()}
             </BodyText>
         </div>
         <div className="md:w-[1px] md:h-[24px] w-full h-[1px] bg-stone-300" />
-        <div className="sub-info">
+        <div>
             <BodyText variant="sm" classname="text-stone-600">TANGGAL</BodyText>
             <BodyText variant="baseBold" classname="text-stone-900">{date}</BodyText>
         </div>
         <div className="md:w-[1px] md:h-[24px] w-full h-[1px] bg-stone-300" />
-        <div className="sub-info">
+        <div>
             <BodyText variant="sm" classname="text-stone-600">ESTIMASI</BodyText>
             <BodyText variant="baseBold" classname="text-stone-900">{readDuration}</BodyText>
         </div>
@@ -238,6 +218,8 @@ const DetailInformation = ({ category, date, readDuration }) => (
 
 // ── Section Hero ───────────────────────────────────────────────────────────────
 const SectionHero = ({ article }) => {
+    const [showShare, setShowShare] = useState(false)
+
     const date = new Date(article.created_at).toLocaleDateString('id-ID', {
         day: 'numeric',
         month: 'long',
@@ -249,37 +231,47 @@ const SectionHero = ({ article }) => {
         : [article.thumbnail].filter(Boolean)
 
     return (
-        <section className="bg-white">
-            <div className="pt-[140px] pb-[64px] px-5 lg:px-0 max-w-[996px] mx-auto bg-white">
+        <React.Fragment>
+            <section className="bg-white">
+                <div className="pt-[140px] pb-[64px] px-5 lg:px-0 max-w-[996px] mx-auto bg-white">
+                    <div className="mb-8 lg:hidden">
+                        <MobileSlider images={images} />
+                    </div>
 
-        
+                    <div className="flex gap-5">
+                        <article className="flex flex-col gap-9 max-w-[690px] w-full">
+                            <BackButton />
+                            <HeadingSatoe>{article.title}</HeadingSatoe>
+                            <DetailInformation
+                                category={article.category_name}
+                                date={date}
+                                readDuration={article.read_duration}
+                            />
+                            <ClickAbleBadge
+                                icon={share}
+                                classname="w-fit cursor-pointer"
+                                onClick={() => setShowShare(true)}
+                            >
+                                Share
+                            </ClickAbleBadge>
+                        </article>
 
-                {/* Main Content */}
-                <div className="flex gap-5">
-                    {/* Left Side */}
-                    <article className="flex flex-col gap-9 max-w-[690px] w-full">
-                        <BackButton />
-                        <HeadingSatoe>{article.title}</HeadingSatoe>
-                        <DetailInformation
-                            category={article.category_name}
-                            date={date}
-                            readDuration={article.read_duration}
-                        />
-                        <ClickAbleBadge icon={share} classname="w-fit">Share</ClickAbleBadge>
-
-                        {/* Mobile Slider — di atas konten */}
-                        <div className=" lg:hidden">
-                            <MobileSlider images={images} />
-                        </div>
-                    </article>
-
-                    {/* Right Side — Desktop Tinder Slider */}
-                    <article className="lg:flex w-full hidden">
-                        <TinderImageSlider images={images} />
-                    </article>
+                        <article className="lg:flex w-full hidden">
+                            <TinderImageSlider images={images} />
+                        </article>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+
+            <AnimatePresence>
+                {showShare && (
+                    <SharePopup
+                        article={article}
+                        onClose={() => setShowShare(false)}
+                    />
+                )}
+            </AnimatePresence>
+        </React.Fragment>
     )
 }
 
