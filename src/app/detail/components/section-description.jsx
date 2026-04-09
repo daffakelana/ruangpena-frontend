@@ -7,7 +7,7 @@ const SectionDescription = ({ content }) => {
       <div className="max-w-[996px] mx-auto  lg:pt-0 pb-4 px-4 lg:px-0">
         <div
           className={clsx(
-            'max-w-[700px] dm-sans text-stone-900',
+            'max-w-[700px] 2xl:max-w-[900px] dm-sans text-stone-900 py-9',
             // Headings
             '[&_h1]:text-[2em] [&_h1]:font-bold [&_h1]:leading-[1.3] [&_h1]:mb-4 [&_h1]:mt-8',
             '[&_h2]:text-[1.5em] [&_h2]:font-bold [&_h2]:leading-[1.3] [&_h2]:mb-3 [&_h2]:mt-7',
